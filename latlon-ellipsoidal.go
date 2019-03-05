@@ -57,6 +57,7 @@ var (
 	EllipsoidWGS72         = &Ellipsoid{a: 6378135, b: 6356750.5, f: 1 / 298.26}
 )
 
+// Helmert transform parameters.
 type Transform struct {
 	tx, ty, tz, s, rx, ry, rz float64
 }
@@ -64,6 +65,19 @@ type Transform struct {
 func (t *Transform) inverse() *Transform {
 	return &Transform{-t.tx, -t.ty, -t.tz, -t.s, -t.rx, -t.ry, -t.rz}
 }
+
+var (
+	transformED50       = &Transform{tx: 89.5, ty: 93.8, tz: 123.1, s: -1.2, rx: 0.0, ry: 0.0, rz: 0.156}
+	transformIrl1975    = &Transform{tx: -482.530, ty: 130.596, tz: -564.557, s: -8.150, rx: 1.042, ry: 0.214, rz: 0.631}
+	transformNAD27      = &Transform{tx: 8, ty: -160, tz: -176, s: 0, rx: 0, ry: 0, rz: 0}
+	transformNAD83      = &Transform{tx: 0.9956, ty: -1.9103, tz: -0.5215, s: -0.00062, rx: 0.025915, ry: 0.009426, rz: 0.011599}
+	transformNTF        = &Transform{tx: 168, ty: 60, tz: -320, s: 0, rx: 0, ry: 0, rz: 0}
+	transformOSGB36     = &Transform{tx: -446.448, ty: 125.157, tz: -542.060, s: 20.4894, rx: -0.1502, ry: -0.2470, rz: -0.8421}
+	transformPotsdam    = &Transform{tx: -582, ty: -105, tz: -414, s: -8.3, rx: 1.04, ry: 0.35, rz: -3.08}
+	transformTokyoJapan = &Transform{tx: 148, ty: -507, tz: -685, s: 0, rx: 0, ry: 0, rz: 0}
+	transformWGS72      = &Transform{tx: 0, ty: 0, tz: -4.5, s: -0.22, rx: 0, ry: 0, rz: 0.554}
+	transformWGS84      = &Transform{tx: 0.0, ty: 0.0, tz: 0.0, s: 0.0, rx: 0.0, ry: 0.0, rz: 0.0}
+)
 
 type Datum struct {
 	ellipsoid *Ellipsoid
@@ -78,16 +92,16 @@ type Datum struct {
 // than a meter; for many datums somewhat less.
 var (
 	// transforms: t in metres, s in ppm, r in arcseconds
-	ED50       = &Datum{ellipsoid: EllipsoidIntl1924, transform: &Transform{tx: 89.5, ty: 93.8, tz: 123.1, s: -1.2, rx: 0.0, ry: 0.0, rz: 0.156}}                     // epsg.io/1311
-	Irl1975    = &Datum{ellipsoid: EllipsoidAiryModified, transform: &Transform{tx: -482.530, ty: 130.596, tz: -564.557, s: -8.150, rx: 1.042, ry: 0.214, rz: 0.631}} // epsg.io/1954
-	NAD27      = &Datum{ellipsoid: EllipsoidClarke1866, transform: &Transform{tx: 8, ty: -160, tz: -176, s: 0, rx: 0, ry: 0, rz: 0}}
-	NAD83      = &Datum{ellipsoid: EllipsoidGRS80, transform: &Transform{tx: 0.9956, ty: -1.9103, tz: -0.5215, s: -0.00062, rx: 0.025915, ry: 0.009426, rz: 0.011599}}
-	NTF        = &Datum{ellipsoid: EllipsoidClarke1880IGN, transform: &Transform{tx: 168, ty: 60, tz: -320, s: 0, rx: 0, ry: 0, rz: 0}}
-	OSGB36     = &Datum{ellipsoid: EllipsoidAiry1830, transform: &Transform{tx: -446.448, ty: 125.157, tz: -542.060, s: 20.4894, rx: -0.1502, ry: -0.2470, rz: -0.8421}} // epsg.io/1314
-	Potsdam    = &Datum{ellipsoid: EllipsoidBessel1841, transform: &Transform{tx: -582, ty: -105, tz: -414, s: -8.3, rx: 1.04, ry: 0.35, rz: -3.08}}
-	TokyoJapan = &Datum{ellipsoid: EllipsoidBessel1841, transform: &Transform{tx: 148, ty: -507, tz: -685, s: 0, rx: 0, ry: 0, rz: 0}}
-	WGS72      = &Datum{ellipsoid: EllipsoidWGS72, transform: &Transform{tx: 0, ty: 0, tz: -4.5, s: -0.22, rx: 0, ry: 0, rz: 0.554}}
-	WGS84      = &Datum{ellipsoid: EllipsoidWGS84, transform: &Transform{tx: 0.0, ty: 0.0, tz: 0.0, s: 0.0, rx: 0.0, ry: 0.0, rz: 0.0}}
+	ED50       = &Datum{ellipsoid: EllipsoidIntl1924, transform: transformED50}        // epsg.io/1311
+	Irl1975    = &Datum{ellipsoid: EllipsoidAiryModified, transform: transformIrl1975} // epsg.io/1954
+	NAD27      = &Datum{ellipsoid: EllipsoidClarke1866, transform: transformNAD27}
+	NAD83      = &Datum{ellipsoid: EllipsoidGRS80, transform: transformNAD83}
+	NTF        = &Datum{ellipsoid: EllipsoidClarke1880IGN, transform: transformNTF}
+	OSGB36     = &Datum{ellipsoid: EllipsoidAiry1830, transform: transformOSGB36} // epsg.io/1314
+	Potsdam    = &Datum{ellipsoid: EllipsoidBessel1841, transform: transformPotsdam}
+	TokyoJapan = &Datum{ellipsoid: EllipsoidBessel1841, transform: transformTokyoJapan}
+	WGS72      = &Datum{ellipsoid: EllipsoidWGS72, transform: transformWGS72}
+	WGS84      = &Datum{ellipsoid: EllipsoidWGS84, transform: transformWGS84}
 )
 
 /* sources:

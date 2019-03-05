@@ -79,14 +79,14 @@ func (point *LatLon) LatLonToOsGrid() OsGridRef {
 	φ := point.Lat * DegToRad
 	λ := point.Lon * DegToRad
 
-	a, b := 6377563.396, 6356256.909     // Airy 1830 major & minor semi-axes
-	F0 := 0.9996012717                   // NatGrid scale factor on central meridian
-	φ0, λ0 := 49*DegToRad, (-2)*DegToRad // NatGrid true origin is 49°N,2°W
-	N0, E0 := -100000.0, 400000.0        // northing & easting of true origin, metres
-	e2 := 1 - (b*b)/(a*a)                // eccentricity squared
-	n := (a - b) / (a + b)
-	n2 := n * n
-	n3 := n * n * n // n, n², n³
+	const a, b = 6377563.396, 6356256.909         // Airy 1830 major & minor semi-axes
+	const F0 = 0.9996012717                       // NatGrid scale factor on central meridian
+	const φ0, λ0 = 49 * DegToRad, (-2) * DegToRad // NatGrid true origin is 49°N,2°W
+	const N0, E0 = -100000.0, 400000.0            // northing & easting of true origin, metres
+	const e2 = 1 - (b*b)/(a*a)                    // eccentricity squared
+	const n = (a - b) / (a + b)
+	const n2 = n * n
+	const n3 = n * n * n // n, n², n³
 
 	cosφ, sinφ := math.Cos(φ), math.Sin(φ)
 	ν := a * F0 / math.Sqrt(1-e2*sinφ*sinφ)                // nu = transverse radius of curvature
@@ -151,14 +151,14 @@ func (gridRef *OsGridRef) OsGridToLatLon(datum *Datum) *LatLon {
 	E := gridRef.Easting
 	N := gridRef.Northing
 
-	a, b := 6377563.396, 6356256.909       // Airy 1830 major & minor semi-axes
-	F0 := 0.9996012717                     // NatGrid scale factor on central meridian
-	φ0, λ0 := 49.0*DegToRad, -2.0*DegToRad // NatGrid true origin is 49°N,2°W
-	N0, E0 := -100000.0, 400000.0          // northing & easting of true origin, metres
-	e2 := 1.0 - (b*b)/(a*a)                // eccentricity squared
-	n := (a - b) / (a + b)
-	n2 := n * n
-	n3 := n * n * n // n, n², n³
+	const a, b = 6377563.396, 6356256.909           // Airy 1830 major & minor semi-axes
+	const F0 = 0.9996012717                         // NatGrid scale factor on central meridian
+	const φ0, λ0 = 49.0 * DegToRad, -2.0 * DegToRad // NatGrid true origin is 49°N,2°W
+	const N0, E0 = -100000.0, 400000.0              // northing & easting of true origin, metres
+	const e2 = 1.0 - (b*b)/(a*a)                    // eccentricity squared
+	const n = (a - b) / (a + b)
+	const n2 = n * n
+	const n3 = n * n * n // n, n², n³
 
 	φ := φ0
 	var M float64 = 0
@@ -215,13 +215,13 @@ func (gridRef *OsGridRef) OsGridToLatLon(datum *Datum) *LatLon {
 	return point
 }
 
-func toNumeric(value float64) string {
+func toNumeric(value float64) (result string) {
 	intPart, floatPart := math.Modf(value)
-	result := fmt.Sprintf("%06d", int(intPart))
+	result = fmt.Sprintf("%06d", int(intPart))
 	if floatPart > 0 {
 		result += fmt.Sprintf("%.3f", floatPart)[1:]
 	}
-	return result
+	return
 }
 
 /**
